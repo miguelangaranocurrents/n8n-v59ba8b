@@ -113,7 +113,9 @@ export const coloringStateField = StateField.define<DecorationSet>({
 
 					const decoration = resolvableStateToDecoration[txEffect.value.state ?? 'pending'];
 
-					if (txEffect.value.from === 0 && txEffect.value.to === 0) continue;
+					// Mark decorations may not be empty: an empty resolvable (e.g. `{{ "" }}`)
+					// anywhere in the text would throw and drop every later effect.
+					if (txEffect.value.from >= txEffect.value.to) continue;
 
 					colorings = colorings.update({
 						add: [decoration.range(txEffect.value.from, txEffect.value.to)],
